@@ -9,7 +9,9 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
@@ -50,6 +52,11 @@ public class CameraActivity extends AppCompatActivity {
         if (requestCode == 100 && resultCode == RESULT_OK && data != null){
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
             image.setImageBitmap(bitmap);
+
+            MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "Title", "Description");
+
+            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                    Uri.parse("file://" + Environment.getExternalStorageDirectory())));
 
         }
     }
